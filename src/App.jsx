@@ -1,52 +1,13 @@
 import { useEffect, useState } from 'react'
+import useFetchData from './useFetchData';
 
 const App = () => {
- const [users,setUsers] = useState([])
- const [userLoading,setUserLoading] = useState(false)
- const [userError,setUserError] = useState('')
- const [posts,setPosts] = useState([])
- const [postsLoading,setPostsLoading] = useState(false)
- const [postsError,setPostsError] = useState('')
+  const users = useFetchData('https://jsonplaceholder.typicode.com/users');
+
+  const posts = useFetchData('https://jsonplaceholder.typicode.com/posts');
+  const comments = useFetchData('https://jsonplaceholder.typicode.com/comments');
 
 
- useEffect (()=>{
-
-  fetchUsers();
-  fetchPosts();
- },[]);
-
-
-
- const fetchUsers = async () =>{
-    setUserLoading(true);
-    try{
-      const res = await fetch('https://jsonplaceholder.typicode.com/users');
-      const data = await res.json();
-      setUsers(data);
-      setUserError('');
-      setUserLoading(false);
-    }catch(e){
-      setUserError('server error');
-      setUserLoading(false);
-    }
-   
- };
-
-
-  const fetchPosts = async() =>{
-    setPostsLoading(true);
-    try{
-      const res = await fetch('https://jsonplaceholder.typicode.com/posts');
-      const data = await res.json();
-      setPosts(data);
-      setPostsError('');
-      setPostsLoading(false);
-    }catch(e){
-      setPostsError('server error');
-      setPostsLoading(false);
-    }
-  
-  };
 
 
   return (
@@ -62,19 +23,33 @@ const App = () => {
 
           <hr/>
 
-          {userLoading && <h3>Loading...</h3> }
-          {userError && <h3>{userError}</h3>}
-          {users.map((user)=>(
+          {users.loading && <h3>Loading...</h3> }
+          {users.error && <h3>{users.error}</h3>}
+          {users.data.map((user)=>(
             <li key={user.id}>{user.name}</li>
           ))}
         </div>
         <div>
-          Posts
+          posts
+
           <hr/>
-          {postsLoading && <h3>Loading...</h3> }
-          {postsError && <h3>{postsError }</h3>}
-          {posts.map((post)=>(
+
+          {posts.loading && <h3>Loading...</h3> }
+          {posts.error && <h3>{posts.error}</h3>}
+          {posts.data.map((post)=>(
             <li key={post.id}>{post.title}</li>
+          ))}
+        </div>
+
+        <div>
+          comment
+
+          <hr/>
+
+          {comments.loading && <h3>Loading...</h3> }
+          {comments.error && <h3>{comments.error}</h3>}
+          {comments.data.map((comment)=>(
+            <li key={comment.id}>{comment.name}</li>
           ))}
         </div>
       </div>
