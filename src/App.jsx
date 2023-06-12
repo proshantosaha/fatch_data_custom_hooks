@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import useFetchData from './useFetchData';
 
 const App = () => {
-  const users = useFetchData('https://jsonplaceholder.typicode.com/users');
+  const users = useFetchData('https://jsonplaceholder.typicode.com/users',
+  (data)=>data.map((item)=>({id:item.id,  name:item.name})));
 
-  const posts = useFetchData('https://jsonplaceholder.typicode.com/posts');
-  const comments = useFetchData('https://jsonplaceholder.typicode.com/comments');
+  const posts = useFetchData('https://jsonplaceholder.typicode.com/posts',(data)=>data.slice(0,10));
+  const comments = useFetchData('https://jsonplaceholder.typicode.com/comments',(data)=>data.slice(0,10));
 
 
 
@@ -25,7 +26,7 @@ const App = () => {
 
           {users.loading && <h3>Loading...</h3> }
           {users.error && <h3>{users.error}</h3>}
-          {users.data.map((user)=>(
+          {users.data?.map((user)=>(
             <li key={user.id}>{user.name}</li>
           ))}
         </div>
